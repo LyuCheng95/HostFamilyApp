@@ -1,72 +1,145 @@
 import React from 'react';
-import { StyleSheet, Dimensions, ScrollView } from 'react-native';
-import { Button, Block, Text, Input, theme } from 'galio-framework';
-
-import { Icon, Product } from '../components/';
+import { StyleSheet, Dimensions, ScrollView, View, ImageBackground, TouchableOpacity } from 'react-native';
+import { Card, Button, Icon } from 'react-native-elements'
+import { Block, Text, Input, theme } from 'galio-framework';
+import { SliderBox } from "react-native-image-slider-box";
 
 const { width } = Dimensions.get('screen');
-import products from '../constants/products';
 
 export default class Home extends React.Component {
-  renderSearch = () => {
-    const { navigation } = this.props;
-    const iconCamera = <Icon size={16} color={theme.COLORS.MUTED} name="zoom-in" family="material" />
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      images: [
+        require('../assets/images/house1.jpg'),
+        require('../assets/images/house2.jpg'),
+        require('../assets/images/house3.jpg'),
+        require('../assets/images/house4.jpg'),
+        require('../assets/images/house5.jpg'),
+        require('../assets/images/house6.jpg'),
+        require('../assets/images/house7.jpg'),
+        require('../assets/images/house8.jpg'),
+      ],
+      events: [
+        {
+          title: 'Christmas Eve 1',
+          content: "Dinner together! Let's have a good time!",
+          date: '01/01/2010',
+          location: 'home',
+        },
+        {
+          title: 'Christmas Eve 2',
+          content: "Dinner together! Let's have a good time!",
+          date: '01/02/2010',
+          location: 'home',
+        },
+      ]
+    };
+  }
+
+  handleDeleteEvent = index => {
+    this.setState({ events: this.state.events.filter((event, i) => i != index ) });
+  }
+
+  renderItem = ({ item, index }) => {
+    const { uri, title, content } = item;
     return (
-      <Input
-        right
-        color="black"
-        style={styles.search}
-        iconContent={iconCamera}
-        placeholder="What are you looking for?"
-        onFocus={() => navigation.navigate('Pro')}
+      <TouchableOpacity
+        activeOpacity={1}
+        style={styles.item}
+        onPress={() => {
+          this.numberCarousel.scrollToIndex(index);
+        }}
+      >
+        <ImageBackground
+          source={{ uri: uri }}
+          style={styles.imageBackground}
+        >
+          <View style={styles.rightTextContainer}>
+            <Text style={styles.rightText}>Lorem</Text>
+          </View>
+        </ImageBackground>
+        <View style={styles.lowerContainer}>
+          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.contentText}>{content}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  renderSliderBox = () => {
+    return (
+      <SliderBox
+        images={this.state.images}
+        sliderBoxHeight={200}
+        onCurrentImagePressed={index => console.warn(`image ${index} pressed`)}
+        dotColor="#222222"
+        inactiveDotColor="#90A4AE"
+        paginationBoxVerticalPadding={0}
+        autoplay
+        circleLoop
       />
-    )
-  }
-  
-  renderTabs = () => {
-    const { navigation } = this.props;
-
-    return (
-      <Block row style={styles.tabs}>
-        <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Pro')}>
-          <Block row middle>
-            <Icon name="grid" family="feather" style={{ paddingRight: 8 }} />
-            <Text size={16} style={styles.tabTitle}>Categories</Text>
-          </Block>
-        </Button>
-        <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Pro')}>
-          <Block row middle>
-            <Icon size={16} name="camera-18" family="GalioExtra" style={{ paddingRight: 8 }} />
-            <Text size={16} style={styles.tabTitle}>Best Deals</Text>
-          </Block>
-        </Button>
-      </Block>
-    )
+    );
   }
 
-  renderProducts = () => {
+  renderEvents = () => {
+    const cardList = this.state.events.map((event, i) => {
+      return (
+        <Card
+          title={event.title}
+          key={event.title + event.date}
+        >
+          <Text style={{ marginBottom: 10 }}>
+            地点: {event.location}
+          </Text>
+          <Text style={{ marginBottom: 10 }}>
+            日期: {event.date}
+          </Text>
+          <Text> {event.content} </Text>
+          <View style={styles.cardButtons} >
+            <Icon
+              name='delete'
+              color='#999'
+              style={styles.deleteIcon}
+              onPress={() => this.handleDeleteEvent(i)}
+            />
+            <Icon
+              name='create'
+              color='#999'
+              style={styles.editIcon}
+              onPress={() => console.log('hello')}
+            />
+          </View>
+        </Card>
+      )
+    })
+    return cardList;
+  }
+
+  renderHomepageContent = () => {
     return (
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.products}>
-        <Block flex>
-          <Product product={products[0]} horizontal />
-          <Block flex row>
-            <Product product={products[1]} style={{ marginRight: theme.SIZES.BASE }} />
-            <Product product={products[2]} />
-          </Block>
-          <Product product={products[3]} horizontal />
-          <Product product={products[4]} full />
+        <Block>
+          {this.renderSliderBox()}
+        </Block>
+        <Block>
+          {this.renderEvents()}
+        </Block>
+        <Block>
+          <Button title='添加' />
         </Block>
       </ScrollView>
-    )
+    );
   }
 
   render() {
+    console.log(this.state.events);
     return (
       <Block flex center style={styles.home}>
-        {this.renderProducts()}
+        {this.renderHomepageContent()}
       </Block>
     );
   }
@@ -74,7 +147,7 @@ export default class Home extends React.Component {
 
 const styles = StyleSheet.create({
   home: {
-    width: width,    
+    width: width,
   },
   search: {
     height: 48,
@@ -119,5 +192,49 @@ const styles = StyleSheet.create({
   products: {
     width: width - theme.SIZES.BASE * 2,
     paddingVertical: theme.SIZES.BASE * 2,
+    paddingTop: 20,
   },
+  carousel: {
+    flex: 1,
+    backgroundColor: '#141518'
+  },
+  item: {
+    borderWidth: 2,
+    backgroundColor: 'white',
+    flex: 1,
+    borderRadius: 5,
+    borderColor: 'white',
+    elevation: 3
+  },
+  imageBackground: {
+    flex: 2,
+    backgroundColor: '#EBEBEB',
+    borderWidth: 5,
+    borderColor: 'white'
+  },
+  rightTextContainer: {
+    marginLeft: 'auto',
+    marginRight: -2,
+    backgroundColor: 'rgba(49, 49, 51,0.5)',
+    padding: 3,
+    marginTop: 3,
+    borderTopLeftRadius: 5,
+    borderBottomLeftRadius: 5
+  },
+  rightText: { color: 'white' },
+  lowerContainer: {
+    flex: 1,
+    margin: 10
+  },
+  titleText: {
+    fontWeight: 'bold',
+    fontSize: 18
+  },
+  contentText: {
+    fontSize: 12
+  },
+  cardButtons: {
+    flex: 1,
+    flexDirection: 'row-reverse'
+  }
 });

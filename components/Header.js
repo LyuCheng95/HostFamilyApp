@@ -107,35 +107,46 @@ class Header extends React.Component {
     }
   }
 
-  renderSearch = () => {
-    const { navigation } = this.props;
-    return (
-      <Input
-        right
-        color="black"
-        style={styles.search}
-        placeholder="What are you looking for?"
-        onFocus={() => navigation.navigate('Pro')}
-        iconContent={<Icon size={16} color={theme.COLORS.MUTED} name="magnifying-glass" family="entypo" />}
-      />
-    )
-  }
+  // renderSearch = () => {
+  //   const { navigation } = this.props;
+  //   return (
+  //     <Input
+  //       right
+  //       color="black"
+  //       style={styles.search}
+  //       placeholder="What are you looking for?"
+  //       onFocus={() => navigation.navigate('Pro')}
+  //       iconContent={<Icon size={16} color={theme.COLORS.MUTED} name="magnifying-glass" family="entypo" />}
+  //     />
+  //   )
+  // }
 
   renderTabs = () => {
     const { navigation, tabTitleLeft, tabTitleRight } = this.props;
-
     return (
       <Block row style={styles.tabs}>
         <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Pro')}>
           <Block row middle>
-            <Icon name="grid" family="feather" style={{ paddingRight: 8 }} />
-            <Text size={16} style={styles.tabTitle}>{tabTitleLeft || 'Categories'}</Text>
+            <Icon name="rest" family="AntDesign" style={{ paddingRight: 8 }} />
+            <Text size={16} style={styles.tabTitle}>{tabTitleLeft || '餐饮'}</Text>
+          </Block>
+        </Button>
+        <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Pro')}>
+          <Block row middle>
+            <Icon name="trash" family="feather" style={{ paddingRight: 8 }} />
+            <Text size={16} style={styles.tabTitle}>{tabTitleLeft || '卫生'}</Text>
+          </Block>
+        </Button>
+        <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Pro')}>
+          <Block row middle>
+            <Icon name="book" family="feather" style={{ paddingRight: 8 }} />
+            <Text size={16} style={styles.tabTitle}>{tabTitleLeft || '学习'}</Text>
           </Block>
         </Button>
         <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Pro')}>
           <Block row middle>
-            <Icon size={16} name="camera-18" family="GalioExtra" style={{ paddingRight: 8 }} />
-            <Text size={16} style={styles.tabTitle}>{tabTitleRight || 'Best Deals'}</Text>
+            <Icon size={16} name="check" family="feather" style={{ paddingRight: 8 }} />
+            <Text size={16} style={styles.tabTitle}>{tabTitleRight || '出勤'}</Text>
           </Block>
         </Button>
       </Block>
@@ -147,7 +158,7 @@ class Header extends React.Component {
     if (search || tabs) {
       return (
         <Block center>
-          {search ? this.renderSearch() : null}
+          {/* {search ? this.renderSearch() : null} */}
           {tabs ? this.renderTabs() : null}
         </Block>
       )
@@ -171,8 +182,8 @@ class Header extends React.Component {
           title={title}
           style={styles.navbar}
           transparent={transparent}
-          right={this.renderRight()}
-          rightStyle={{ alignItems: 'center' }}
+          // right={this.renderRight()}
+          // rightStyle={{ alignItems: 'center' }}
           leftStyle={{ flex: 0.3, paddingTop: 2  }}
           leftIconName="navicon"
           leftIconColor={white ? theme.COLORS.WHITE : theme.COLORS.ICON}
@@ -237,6 +248,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 3,
   },
+  familyName: {
+    height: 48,
+    width: width - 32,
+    marginHorizontal: 16,
+    borderWidth: 1,
+    borderRadius: 3,
+  },
+  familyNameText: {
+  },
   tabs: {
     marginBottom: 24,
     marginTop: 10,
@@ -244,7 +264,7 @@ const styles = StyleSheet.create({
   },
   tab: {
     backgroundColor: theme.COLORS.TRANSPARENT,
-    width: width * 0.50,
+    width: width * 0.25,
     borderRadius: 0,
     borderWidth: 0,
     height: 24,
